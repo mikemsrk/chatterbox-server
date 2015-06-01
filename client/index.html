@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chatterbox</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- dependencies -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/backbone/backbone-min.js"></script>
+
+    <!-- your scripts -->
+    <!-- <script src="env/config.js"></script> -->
+    <script src="scripts/app.js"></script>
+  </head>
+  <body>
+    <div id="main" class="container">
+      <div class="row">
+
+        <section class="col-md-6 col-md-offset-2">
+          <h1>chatterbox</h1>
+          <div class="menu">
+            <button class="refresh">Refresh</button>
+          </div>
+
+          <div class="inputArea">
+            <div id="rooms"> Room:
+              <select id="roomSelect"></select>
+            </div>
+            <p>New Room: <input type="text" name="roomname" id="roomname"/></p>
+            <p>Message: <input type="text" name="message" id="message"/></p>
+            <button class="submit">Submit</button>
+          </div>
+
+          <ul id = "chats" class = "list-unstyled"></ul>
+        </section>
+
+        <section class="col-md-2 col-md-offset-1">
+          <h2>friends</h2>
+          <ul class="friends-list"></ul>
+        </section>
+
+      </div> <!--row-->
+    </div> <!--main-->
+  </body>
+  <script>
+    $(document).on('ready', function () {
+      var messages = new Messages();
+      var messagesView = new MessagesView({
+        collection: messages,
+        el: $('#chats')
+      });
+      var submitView = new SubmitView({
+        collection: messages,
+        el: $('.inputArea')
+      });
+      // setInterval(messages.loadMessages.bind(messages), 1000);
+    });
+  </script>
+</html>
