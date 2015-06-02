@@ -1,4 +1,4 @@
-var messages = {results: [{username: 'hello', text:'buddy',roomname:'pink'}]};
+var messages = {results: []};
 /*************************************************************
 
 You should implement your request handler function in this file.
@@ -28,10 +28,10 @@ var requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log("Serving request type " + request.method + " for url " + request.url);
+  // console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
+  // var statusCode = 200;
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -45,7 +45,7 @@ var requestHandler = function(request, response) {
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  // response.writeHead(statusCode, headers);
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -54,17 +54,26 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
+
   if (request.method === "POST"){
     // messages.results.push()
     request.on('data', function(chunk) {
-      console.log("Received body data:");
+      // console.log("Received body data:");
       // console.log(chunk.toString());
       messages.results.push(JSON.parse(chunk.toString()));
     });
+    response.writeHead(201, "OK", {'Content-Type': 'text/html'});
     request.on('end', function() {
-      response.writeHead(200, "OK", {'Content-Type': 'text/html'});
       response.end();
     });
+  }else if(request.method === "GET"){
+    // if classes
+    if(request.url === '/classes/room1' || request.url === '/classes/messages'){
+      response.writeHead(200, "OK", {'Content-Type': 'text/html'});
+    }else{
+    // else return 404
+      response.writeHead(404, "FAIL", {'Content-Type': 'text/html'});
+    }
   }
 
   response.end(JSON.stringify(messages));

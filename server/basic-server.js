@@ -1,7 +1,38 @@
 /* Import node's http module: */
 var http = require("http");
-var handleRequest = require("./request-handler"); // {exports: requestHandler}
+var express = require('express');
+var app = express();
 
+var messages = {results: []};
+
+
+// var handleRequest = require("./request-handler"); // {exports: requestHandler}
+
+app.use(express.static('../client'));
+
+
+app.get('/classes/chatterbox',function(req,res){
+  res.send(JSON.stringify(messages));
+});
+
+app.get('/classes/room1',function(req,res){
+  res.send(JSON.stringify(messages));
+});
+
+app.post('/classes/chatterbox',function(req,res){
+  req.on('data', function(chunk) {
+      messages.results.push(JSON.parse(chunk.toString()));
+    });
+    res.writeHead(201, "OK", {'Content-Type': 'text/html'});
+    req.on('end', function() {
+      res.end();
+    });
+});
+
+
+// app.get('/', function (req, res) {
+//   res.send('Hello World!');
+// });
 
 // Every server needs to listen on a port with a unique number. The
 // standard port for HTTP servers is port 80, but that port is
@@ -23,9 +54,14 @@ var ip = "127.0.0.1";
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-var server = http.createServer(handleRequest.requestHandler);
-console.log("Listening on http://" + ip + ":" + port);
-server.listen(port, ip);
+
+// var server = http.createServer(handleRequest.requestHandler);
+// console.log("Listening on http://" + ip + ":" + port);
+// server.listen(port, ip);
+
+var server = app.listen(port, function () {
+  console.log("Listening on http://" + ip + ":" + port);
+});
 
 // To start this server, run:
 //
